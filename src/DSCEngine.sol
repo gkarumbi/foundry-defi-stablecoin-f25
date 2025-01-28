@@ -44,9 +44,15 @@ contract DSCEngine {
 
     function depositCollateralAndMintDsc() external {}
 
+    function depositCollateral() external{}
+
     function redeemCollateralForDsc() external {}
 
+    function redeemCollateral() external {}
+
     function burnDsc() external {}
+
+    function mintDsc() external{}
 
     function liquidate() external {}
 
