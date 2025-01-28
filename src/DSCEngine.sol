@@ -24,6 +24,8 @@
 // view & pure functions
 
 pragma solidity ^0.8.18 ;
+
+import {DecentralizedStableCoin} from "./DecentralizedStableCoin.sol";
 /**
  * @title DSCEngine
  * @author George Karumbi
@@ -42,9 +44,53 @@ pragma solidity ^0.8.18 ;
 
 contract DSCEngine {
 
+    //////////////////////Errors/////////////////////
+
+    error DSCEngine__NeedsMoreThanZero();
+    error DSCEngine__TokenAddressesAndPriceFeedAddressesMustBeSameLength();
+
+    ///////////////////////State Variables//////////////// 
+    mapping (address token  => address priceFeed) private s_priceFeeds; //allowedtokenToPriceFeed
+    DecentralizedStableCoin private immutable i_dsc;
+
+    ///////////////////////Modifiers//////////////// 
+
+
+
+    modifier moreThanZero(uint256 amount) {
+        if (amount == 0) {
+            revert DSCEngine__NeedsMoreThanZero();
+        }
+        _;
+    }
+
+    modifier isAllowedToken(address token) {
+        //
+        
+    }
+
+    ///////////////Functions////////////////
+    constructor(address[] memory tokenAddresses, address[] memory priceFeedAddresses, address dscAddress){
+        //USD price Feeds
+        if(tokenAddresses.length != priceFeedAddresses.length){
+            revert DSCEngine__TokenAddressesAndPriceFeedAddressesMustBeSameLength();
+        }
+
+        for (uint256 i = 0; i < tokenAddresses.length; i++) {
+            s_priceFeeds[tokenAddresses[i]] = priceFeedAddresses[i];
+        }
+
+        i_dsc = DecentralizedStableCoin(dscAddress);
+
+        //console.log("i_dsc " + i_dsc);
+
+        //For example ETH/USD, BTC/USD, MKR/USD etc
+    }
+
+    //////////////External Functions/////////
     function depositCollateralAndMintDsc() external {}
 
-    function depositCollateral() external{}
+    function depositCollateral(address tokenCollateralAddress, uint256 amountCollateral) external moreThanZero(amountCollateral){}
 
     function redeemCollateralForDsc() external {}
 
